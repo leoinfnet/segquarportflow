@@ -14,10 +14,15 @@ spring:
         default_schema: container_service
         format_sql: true
     show_sql: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer:  org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
 server:
   port: 9080
-
-
 
 management:
   endpoint:
