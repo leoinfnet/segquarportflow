@@ -1,4 +1,7 @@
 package br.com.infnet.containerService.repository;
 
-public interface PortContainerRepository {
+import br.com.infnet.containerService.domain.PortContainer;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PortContainerRepository extends JpaRepository<PortContainer,String> {
 }

@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: container-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/portflow?currentSchema=container_service
+    username: portflow
+    password: portflow
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_schema: container_service
+        format_sql: true
+    show_sql: true
+server:
+  port: 9080
+
+
+
+management:
+  endpoint:
+    web:
+      exposure: health, info
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
+
+
+
+
+
+
+
+

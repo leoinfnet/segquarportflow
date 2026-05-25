@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: portflow-postgres
+    environment:
+      POSTGRES_USER: portflow
+      POSTGRES_DB: portflow
+      POSTGRES_PASSWORD: portflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/init:/docker-entrypoint-initdb.d
+      - portflow-postgres-data:/var/lib/postgres/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portflow -d portflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  mongodb:
+    image: mongo:8
+    container_name: portflow-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: portflow
+      MONGO_INITDB_ROOT_PASSWORD: portflow
+      MONGO_INITDB_DATABASE: terminal_service
+    ports:
+     - "27017:27017"
+    volumes:
+      - ./mongo/init:/docker-entrypoint-initdb.d
+      - portflow-mongo-data:/var/lib/postgres/data
+    healthcheck:
+      test: ["CMD", "mongosh", "--username", "portflow", "--password", "portflow", "--authenticationDatabase", "admin", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  mongo-express:
+    image: mongo-express:1.0.2
+    container_name: portflow-mongo-express
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: portflow
+      ME_CONFIG_MONGODB_ADMINPASSWORD: portflow
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+    ports:
+      - "9098:8081"
+volumes:
+  portflow-postgres-data:
+  portflow-mongo-data:
+
+
+
+
+
+
+
+

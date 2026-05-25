@@ -1,0 +1,35 @@
+
+
+
+  Portos   ->      | ApiGateway < ----- > Eureka
+                   |
+                   |
+                   |
+                   v
+                   | ContainerService
+                   |
+                   |      req -> LB://
+                   |                 TerminalService
+
+
+TERMINAlA
+
+CAMPOA, CAMPOB
+
+TERMINALB
+CAMPOC,CAMPO,Z CAMPOA
+
+
+CHAVE_VALOR -> REDIS,MEMCACHED
+GRAFOS -> NEO4J , AMAZON NEPTUNE
+COLUNAS WIDE ROW -> CASSANDRA, DynamoDB, BIGTABLE
+DOCUMENTOS -> Elasticsearch, Mongo
+coleção -> documento1 {"campoA"} , documento2{"Campob", "CampoC"}
+
+
+
+
+
+
+
+

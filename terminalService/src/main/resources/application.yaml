@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: terminal-service
+  mongodb:
+    uri: mongodb://terminal_service:terminal_service@localhost:27019/terminal_service
+
+server:
+  port: 9081
