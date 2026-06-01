@@ -1,7 +1,7 @@
 package br.com.infnet.containerService;
 
 import br.com.infnet.containerService.containerService.dto.ValidacaoTerminalResponse;
-import br.com.infnet.containerService.containerService.service.TerminalService;
+import br.com.infnet.containerService.containerService.service.TerminalServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class TerminalServiceTest {
     @Autowired
-    TerminalService terminalService;
+    TerminalServiceImpl terminalService;
     @Test
     public void deveTerstarTerminal(){
         ValidacaoTerminalResponse response = terminalService

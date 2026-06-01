@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContainerService {
     private final PortContainerRepository repository;
-    private final TerminalService terminalService;
+    private final TerminalServiceImpl terminalService;
     private final KafkaService kafkaService;
     public PortContainer registerArrival(ContainerArrivalRequest request) {
         PortContainer container = new PortContainer(

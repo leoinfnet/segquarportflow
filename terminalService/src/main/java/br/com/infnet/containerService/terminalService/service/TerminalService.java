@@ -4,6 +4,7 @@ import br.com.infnet.containerService.terminalService.domain.Capacidade;
 import br.com.infnet.containerService.terminalService.domain.Terminal;
 import br.com.infnet.containerService.terminalService.dto.ValidacaoTerminalResponse;
 import br.com.infnet.containerService.terminalService.exception.TerminalNotFoundException;
+import br.com.infnet.containerService.terminalService.metrics.TerminalMetrics;
 import br.com.infnet.containerService.terminalService.repository.TerminalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TerminalService {
     private final TerminalRepository terminalRepository;
-
+    private final TerminalMetrics terminalMetrics;
     public List<Terminal> findAll() {
         return terminalRepository.findAll();
     }
@@ -23,8 +24,10 @@ public class TerminalService {
         return terminalRepository.findByTerminalId(terminalId)
                 .orElseThrow(() -> new TerminalNotFoundException(terminalId));
     }
-
-    public ValidacaoTerminalResponse validarTerminal(String terminalId, String tipoCarga) {
+    public ValidacaoTerminalResponse validarTerminal(String terminalId, String tipoCarga){
+        return terminalMetrics.medirTempoValidacao(() -> executarValidacaoTerminal(terminalId,tipoCarga));
+    }
+    public ValidacaoTerminalResponse executarValidacaoTerminal(String terminalId, String tipoCarga) {
         return terminalRepository.findByTerminalId(terminalId)
                 .map(terminal -> validarTerminalExistente(terminal, tipoCarga))
                 .orElseGet(() -> new ValidacaoTerminalResponse(
@@ -47,7 +50,7 @@ public class TerminalService {
         boolean capacidadeDisponivel = possuiCapacidadeDisponivel(terminal);
 
         boolean terminalValido = ativo && tipoCargaAceito && capacidadeDisponivel;
-
+        registrarResultadoValidacao(terminalValido);
         String mensagem = montarMensagem(
                 terminal.getTerminalId(),
                 tipoCarga,
@@ -103,6 +106,14 @@ public class TerminalService {
         }
 
         return "Terminal " + terminalId + " inválido para a operação";
+    }
+    private void registrarResultadoValidacao(boolean terminalValido) {
+        terminalMetrics.incrementarValidacoesTotal();
+        if (terminalValido) {
+            terminalMetrics.incrementarValidacoesAprovadas();
+        } else {
+            terminalMetrics.incrementarValidacoesRecusadas();
+        }
     }
 }
 
